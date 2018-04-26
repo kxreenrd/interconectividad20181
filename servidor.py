@@ -44,13 +44,17 @@ while True:
         print ("Adios")
         conn.close()
         break
-    if (data == "get"):
+    elif (data == "get"):
         print ("Se enviaran las palabras")
         #Se envia las palabras colocaldas en 'listaPalabras'
         for LP in listaPalabras:
             conn.send(LP.encode())
             #Espera 0.2 segundos para que el cliente pueda hacer su proceso
             time.sleep(0.2)
+    else:
+        respuesta = "No se ha encontrado el comando "
+        respuesta = respuesta.encode('utf-8')
+        conn.send(respuesta)
 
 conn.close()
 s.close()
