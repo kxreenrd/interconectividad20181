@@ -1,3 +1,4 @@
+
 from socket import *
 from Tkinter import *
 import time
@@ -15,7 +16,7 @@ s.settimeout(2.0)
 
 #lista de paquetes
 paquetes = []
-#Respuestas a los mensajes traidos por el servidor
+#Respuestas a los paquetes traidos por el servidor
 respuestas = []
 
 def enviarPalabra():
@@ -57,7 +58,7 @@ def enviarPalabra():
                         respuestas.append(respuesta)
                         print ("El paquete ", paquete.get("numero"), " es valido")
                     else:
-                        respuesta = "El paquete ", paquete.get("numero"), " es invalido. Por favor intentelo de nuevo"
+                        respuesta = "El paquete ", paquete.get("numero"), " es invalido. La palabra encontrada fue " , paquete.get("palabra")
                         respuestas.append(respuesta)
                         print("El paquete ", paquete.get("numero"), " es invalido. Por favor intentelo de nuevo")
                     i+=1
@@ -104,7 +105,8 @@ def enviarPalabra():
                 abrir(respuestas)
                 time.sleep(3)
                 break;
-        if (cadena=="salir"):
+        elif (cadena=="salir"):
+            #Se mostrara en una ventana la respuesta cuando se escribe la palabra 'salir'
             data = s.recv(4096)
             respuestas = []
             respuestas.append("El servidor ha respondido: ")
@@ -114,6 +116,13 @@ def enviarPalabra():
             abrir(respuestas)
             s.close()
             break
+        else:
+            data = s.recv(4096)
+            respuestas = []
+            respuestas.append("El servidor ha respondido: ")
+            respuestas.append(data)
+            abrir(respuestas)
+            hecho = True
 
 ########################### Interfaz Grafica ###########################
 
@@ -128,13 +137,13 @@ def abrir(respuesta):
     for res in respuesta:
         labels.append(Label(Respuestas, text=res))
 
-    #Se añaden los mensajes a la ventana
+    #Se anaden los mensajes a la ventana
     for label in labels:
         label.pack()
     Respuestas.mainloop()
 
 
-#Ventana principal, desde aquí se envian los mensajes
+#Ventana principal, desde aqui se envian los mensajes
 ventana = Tk()
 
 #Se crean todos los elementos que se anadiran a la ventana principal
