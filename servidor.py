@@ -50,7 +50,6 @@ while True:
         for LP in listaPalabras:
             conn.send(LP.encode())
             #Espera 0.2 segundos para que el cliente pueda hacer su proceso
-            #Si no se hace, el cliente se sale por TimeOut
             time.sleep(0.2)
 
 conn.close()
