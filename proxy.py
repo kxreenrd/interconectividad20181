@@ -59,7 +59,7 @@ while True:
         ######################################################################
 
     #Si el cliente envia la palabra obtain se omitira un paquete
-    if (data == "obtain"):
+    elif (data == "obtain"):
         obtener = "get"
         obtener = obtener.encode('utf-8')
         #Se envia la palabra get al servidor
@@ -84,10 +84,16 @@ while True:
         ######################################################################
 
     #Si el cliente escribe 'salir' cierra las conexiones
-    if (data == "salir"):
+    elif (data == "salir"):
         salir = "salir"
         salir = salir.encode('utf-8')
-        sS.send(salir)
+        sC.send(salir)
         sC.close()
         conn.close()
         break
+        
+    #Si el cliente escribe otra cosa
+    else:
+        sC.send(data)
+        mensaje = sC.recv(4096)
+        conn.send(mensaje)
