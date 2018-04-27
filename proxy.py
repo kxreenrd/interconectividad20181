@@ -8,13 +8,13 @@ PORT = 50007
 
 #<---Socket de cliente--->#
 sC = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sC.connect(('10.8.8.57', PORT))
+sC.connect(('192.168.0.3', PORT))
 #Aqui se coloca la direccion del servidor
 #El proxy actua como cliente ante el servidor
 
 #<---Socket de servidor--->#
 sS = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sS.bind(('10.8.8.58', PORT))
+sS.bind((HOST, PORT))
 #Aqui se coloca la direccion del cliente
 #El proxy actua como servidor ante el cliente
 sS.listen(3)
@@ -71,13 +71,15 @@ while True:
         azar = randint(0,9)
         i=0
         #Bucle para recibir y enviar los datos que el servidor envio
-        while i!=10:
+        while i < 10:
 
-            if i == azar: #Se elige un paquete para que no sea enviado
+            if i == 3: #Se elige un paquete para que no sea enviado
+                paquete = sC.recv(4096)
                 i+=1
 
             else: #En caso contrario, se envia el paquete
                 paquete = sC.recv(4096)
+                print("Se enviara este paquete: ", paquete)
                 conn.send(paquete)
                 time.sleep(0.2) #Se necesita esperar para que el cliente pueda hacer su logica
                 i+=1
@@ -91,7 +93,7 @@ while True:
         sC.close()
         conn.close()
         break
-        
+
     #Si el cliente escribe otra cosa
     else:
         sC.send(data)
