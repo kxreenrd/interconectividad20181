@@ -1,8 +1,9 @@
 from socket import *
-from Tkinter import *
+from tkinter import *
 import time
 import socket, pickle
 import json
+
 
 HOST = 'localhost'
 PORT = 50007
@@ -19,16 +20,18 @@ def enviarPalabra():
         respuestas = []
         cadena = entry.get()
         cadena =  cadena.encode('utf-8')
+        print(cadena)
         s.send(cadena)
+        cadena = cadena.decode('ascii')
         if cadena=='get' or cadena=='obtain':
-            for count in range(10):
-                paquetes.append(s.recv(4096))
+            i=0
+            while i<10:
+                
+                paquetes.append(s.recv(4096))                
                 paquete = json.loads(paquetes[len(paquetes)-1].decode())
                 numero = paquete.get("numero")
                 palabra = paquete.get("palabra")
-                palabra = palabra.encode("utf-8")
                 checksum = paquete.get("checksum")
-                checksum = checksum.encode("utf-8")
 
                 #Se hace el checksum de la palabra que llego
                 acumulador=0
@@ -44,6 +47,16 @@ def enviarPalabra():
                 else:
                     respuesta = "Ha llegado la palabra ", palabra, " en la cabecera ", numero
                     respuestas.append(respuesta)
+                i+=1
+            imprimirRespuestas(respuestas)
+        elif cadena == 'salir':
+            s.close()
+            ventana.destroy()
+        else:
+            Mensaje = s.recv(4096)
+            print(Mensaje)
+            respuestas.append("El servidor ha respondido: ")
+            respuestas.append(Mensaje)
             imprimirRespuestas(respuestas)
     except timeout:
         respuestas.append("Se ha exedido el tiempo de espera")
@@ -72,9 +85,6 @@ def enviarPalabra():
                 i+=1
         imprimirRespuestas(respuestas)
 
-
-########################### Interfaz Grafica ###########################
-
 def imprimirRespuestas(respuesta):
     #Para mostrar los mensajes, se usa una lista llamada 'labels'
     labels = []
@@ -89,6 +99,7 @@ def imprimirRespuestas(respuesta):
     for label in labels:
         label.pack()
     Respuestas.mainloop()
+
 
 #Ventana principal, desde aqui se envian los mensajes
 ventana = Tk()
