@@ -30,7 +30,7 @@ PORT = 50007
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #En HOST se coloca la IP de este computador
-s.bind((HOST, PORT))
+s.bind(('10.8.8.93', PORT))
 s.listen(3)
 conn, addr = s.accept()
 
@@ -40,7 +40,6 @@ while True:
     data = data.decode("ascii")
     print(data)
     if (data == "salir"):
-        conn.send(data)
         print ("Adios")
         conn.close()
         break
@@ -48,6 +47,7 @@ while True:
         print ("Se enviaran las palabras")
         #Se envia las palabras colocaldas en 'listaPalabras'
         for LP in listaPalabras:
+            print(LP)
             conn.send(LP.encode())
             #Espera 0.2 segundos para que el cliente pueda hacer su proceso
             time.sleep(0.2)
