@@ -8,7 +8,7 @@ PORT = 50007
 
 #<---Socket de cliente--->#
 sC = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sC.connect(('192.168.0.3', PORT))
+sC.connect(('10.8.8.93', PORT))
 #Aqui se coloca la direccion del servidor
 #El proxy actua como cliente ante el servidor
 
@@ -42,12 +42,12 @@ while True:
         #Bucle para recibir y enviar los datos que el servidor envio
         while i!=10:
             PaqueteRecibido = sC.recv(4096)
+            print(PaqueteRecibido)
             #Envia una palabra diferente segun una posicion dada
             if i == azar:
                 paquete = json.loads(PaqueteRecibido)
                 numero = paquete.get("numero")
                 checksum = paquete.get("checksum")
-                checksum = checksum.encode("utf-8")
                 #Envia la palabra 'corrupto'. Los demas datos son iguales
                 corrupto = json.dumps({'numero': numero, 'palabra': 'corrupto', 'checksum': checksum})
                 conn.send(corrupto.encode())
@@ -73,7 +73,7 @@ while True:
         #Bucle para recibir y enviar los datos que el servidor envio
         while i < 10:
 
-            if i == 3: #Se elige un paquete para que no sea enviado
+            if i == azar: #Se elige un paquete para que no sea enviado
                 paquete = sC.recv(4096)
                 i+=1
 
@@ -96,6 +96,8 @@ while True:
 
     #Si el cliente escribe otra cosa
     else:
-        sC.send(data)
+        palabra = data
+        palabra = palabra.encode('utf-8')
+        sC.send(palabra)
         mensaje = sC.recv(4096)
         conn.send(mensaje)
